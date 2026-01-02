@@ -8,6 +8,57 @@ GitOps is a DevOps practice where Git repositories serve as the single source of
 
 Argo CD is a declarative, GitOps-based continuous delivery tool for Kubernetes that automatically deploys and synchronizes applications from Git repositories to clusters, ensuring the live state matches the desired state defined in Git.
 
+#### ArgoCD Install & Configuration
+
+```bash
+kubectl create namespace argocd
+kubectl apply -n argocd \
+  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl get pods -n argocd
+kubectl port-forward svc/argocd-server -n argocd 8085:443
+https://localhost:8085
+```
+
+##### Get Admin Password
+
+```bash
+kubectl get secret argocd-initial-admin-secret \
+  -n argocd \
+  -o jsonpath="{.data.password}" | base64 --decode
+```
+
+> Login:
+
+- Username: `admin`
+- Password: `output from above`
+
+#### Install Argo CD CLI - Optional but Recommended
+
+```bash
+brew install argocd
+argocd version
+```
+
+#### Login via CLI
+
+```bash
+argocd login localhost:8085 \
+  --username admin \
+  --password Tg5v7O0J6ImlDpJd \
+  --insecure
+```
+
+#### Expose Argo CD via NodePort (instead of port-forward) - Optional
+
+```bash
+kubectl patch svc argocd-server -n argocd \
+  -p '{"spec": {"type": "NodePort"}}'
+```
+
+```bash
+minikube service argocd-server -n argocd # Get URL
+```
+
 ## With Regards, `Jakir`
 
 [![LinkedIn][linkedin-shield-jakir]][linkedin-url-jakir]
