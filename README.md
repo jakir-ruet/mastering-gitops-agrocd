@@ -56,6 +56,11 @@ kubectl patch svc argocd-server -n argocd \
 ```
 
 ```bash
+kubectl patch svc argocd-server -n argocd \
+-p '{"spec": {"type": "LoadBalancer"}}'
+```
+
+```bash
 minikube service argocd-server -n argocd # Get URL
 ```
 
